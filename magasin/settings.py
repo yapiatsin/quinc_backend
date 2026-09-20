@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
@@ -45,7 +45,7 @@ ROOT_URLCONF = 'magasin.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,18 +89,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'fr-fr'
+TIME_ZONE = 'Africa/Abidjan'
 USE_I18N = True
-
 USE_TZ = True
 
+STOCK_ALERT_TIMEZONE = 'Africa/Abidjan'
+STOCK_ALERT_HOURS = (
+    (8, 0),   # matin
+    (10, 0),  # midi
+    (13, 0),  # après-midi
+    (15, 0),  # soir
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
@@ -121,9 +124,7 @@ STOCK_ALERT_HOURS = (
     (15, 0),  # soir
 )
 
-
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -134,13 +135,20 @@ MEDIA_URL = '/media/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
+
 MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
-
-
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
@@ -154,3 +162,36 @@ SESSION_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
+
+# GENIUSPAY_API_KEY = config('GENIUSPAY_API_KEY', default='').strip()
+# GENIUSPAY_API_SECRET = config('GENIUSPAY_API_SECRET', default='').strip()
+# GENIUSPAY_BASE_URL = config(
+#     'GENIUSPAY_BASE_URL',
+#     default='https://pay.genius.ci/api/v1/merchant',
+# ).strip().rstrip('/')
+# GENIUSPAY_WEBHOOK_SECRET = config('GENIUSPAY_WEBHOOK_SECRET', default='').strip()
+# GENIUSPAY_MIN_AMOUNT = 200
+
+# WhatsApp business (e-com + partage lien paiement caisse) — chiffres seuls, ex. 2250787532210
+# WHATSAPP_BUSINESS_NUMBER = config(
+#     'WHATSAPP_BUSINESS_NUMBER',
+#     default='2250787532210',
+# ).strip().lstrip('+')
+
+# Connexion par compte Google (Google Identity Services).
+# L'identifiant client est public : il est expose dans la page de connexion et
+# sert au navigateur a demander un jeton. C'est le SERVEUR qui valide ensuite ce
+# jeton aupres de Google, aucun secret n'est donc necessaire ici.
+# Vide = bouton Google masque, l'application reste utilisable sans.
+# GOOGLE_OAUTH_CLIENT_ID = config('GOOGLE_OAUTH_CLIENT_ID', default='').strip()
+
+# # Chatbot e-com — clé IA (non utilisée pour l’instant)
+# CHATBOT_AI_API_KEY = config('CHATBOT_AI_API_KEY', default='').strip()
+
+# # Pusher (temps réel magasin — remplace MQTT local)
+# PUSHER_APP_ID = config('PUSHER_APP_ID', default='')
+# PUSHER_KEY = config('PUSHER_KEY', default='')
+# PUSHER_SECRET = config('PUSHER_SECRET', default='')
+# PUSHER_CLUSTER = config('PUSHER_CLUSTER', default='eu')
+
+
