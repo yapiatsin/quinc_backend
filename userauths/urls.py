@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import index
+from .views import *
 
 urlpatterns = [
-    path('us/', index, name='userauths_index'),
+    # path('us/', index, name='userauths_index'),
 ]
 
